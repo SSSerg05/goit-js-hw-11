@@ -1,0 +1,29 @@
+{
+  "name": "goit-js-hw-11",
+  "description": "js-2.0 home work #11",
+  "version": "1.0.0",
+  "source": "src/*.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "parcel src/*.html",
+    "dev": "parcel src/*.html",
+    "build": "parcel build src/*.html --public-url /"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SSSerg05/goit-js-hw-11.git"
+  },
+  "author": "SSerg",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SSSerg05/goit-js-hw-11/issues"
+  },
+  "homepage": "https://github.com/SSSerg05/goit-js-hw-11",
+  "devDependencies": {
+    "parcel": "^2.8.3"
+  },
+  "dependencies": {
+    "notiflix": "^3.2.6",
+    "simplelightbox": "^2.13.0"
+  }
+}
