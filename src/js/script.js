@@ -1,7 +1,8 @@
 import SimpleLightbox from "simplelightbox";
 import "simplelightbox/dist/simple-lightbox.min.css";
 
-const axios = require('axios/dist/node/axios.cjs'); // node
+const axios = require("axios/dist/axios.min.js"); // node
+//const axios = require('axios');
 
 const lightbox = new SimpleLightbox('.gallery a', { /* options */ });
 
