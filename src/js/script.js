@@ -8,18 +8,22 @@ const lightbox = new SimpleLightbox('.gallery a', { /* options */ });
 
 
 const form = document.querySelector(".search-form");
+const input = form.firstElementChild
 form.addEventListener("submit", onSubmit);
 
 
 
 // username u_ht1qf13txz
 // user_id:36214966 
+// key 36214966-0d101d8d6f502ad642532aad3
 function onSubmit(event) { 
 
   // Optionally the request above could also be done as
   axios.get('/user', {
     params: {
-      ID: 36214966
+      ID: 36214966,
+      key: '36214966-0d101d8d6f502ad642532aad3',
+      q: event.currentTarget.value
     }
   })
   .then(function (response) {
