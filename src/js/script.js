@@ -1,12 +1,16 @@
 import SimpleLightbox from "simplelightbox";
 import "simplelightbox/dist/simple-lightbox.min.css";
 
+import Notiflix from 'notiflix';
+
 const axios = require("axios/dist/axios.min.js"); // node
 //const axios = require('axios');
+const PER_PAGE = 40
 
 const refs = {
   form: document.querySelector(".search-form"),
   out: document.querySelector(".gallery"),
+  count: document.querySelector(".count"),
   btnNext: document.querySelector(".load-more"),
 }
 
@@ -35,8 +39,7 @@ function onFormInput() {
 function onFormSubmit(event) { 
   event.preventDefault();
 
-  const currentValue = refs.form.elements.searchQuery.value.trim()
-  if (valueForm !== currentValue && valueForm !== '') { 
+  if (valueForm !== '') { 
     nextPage = 1
     refs.btnNext.classList.add("no-display")
   }
@@ -51,7 +54,7 @@ function onFormSubmit(event) {
       orientation: 'horizontal',
       safesearch: true,
       page: nextPage,
-      per_page: 40,
+      per_page: PER_PAGE,
     }
   })
   .then(function (response) {
@@ -67,6 +70,17 @@ function onFormSubmit(event) {
 
     nextPage++;
     valueForm = refs.form.elements.searchQuery.value.trim();
+
+    refs.count.innerHTML = viewCountImages(response.data);
+    Notiflix.Notify.success("Hooray! We found totalHits images.")    
+
+    const { height: cardHeight } = refs.out.firstElementChild.getBoundingClientRect();
+    console.dir(cardHeight )
+
+    window.scrollBy({
+      top: cardHeight * 2,
+      behavior: "smooth",
+    });
   })
   .catch(function (error) {
     console.log(error);
@@ -123,7 +137,7 @@ function onViewNext() {
       orientation: 'horizontal',
       safesearch: true,
       page: nextPage,
-      per_page: 40,
+      per_page: PER_PAGE,
     }
   })
   .then(function (response) {
@@ -136,9 +150,22 @@ function onViewNext() {
 
     refs.out.innerHTML = str;
     lightbox.refresh();
+    refs.count.innerHTML = viewCountImages(response.data);
+    if ((nextPage-1) * PER_PAGE > response.data.totalHits) { 
+      Notiflix.Notify.failure("We're sorry, but you've reached the end of search results.")
+      refs.btnNext.classList.add("no-display")
+    }
   })
   .catch(function (error) {
     console.log(error);
   });
  
+}
+
+
+function viewCountImages(obj) { 
+  return `
+  <div class="counts">
+    <p>Images: ${(nextPage - 2) * PER_PAGE + 1} - ${(nextPage - 1) * PER_PAGE} / Total: ${obj.totalHits }
+  </div>`
 }

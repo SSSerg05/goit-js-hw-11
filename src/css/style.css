@@ -24,6 +24,7 @@ p {
   margin: 0;
 }
 .search-form {
+  position: relative;
   background-color: cornflowerblue;
   padding-top: 10px;
   padding-bottom: 10px;
@@ -51,7 +52,7 @@ a {
   gap: 24px;
   justify-content: center;
 
-  padding-top: 12px;
+  margin-top: 12px;
 }
 
 .photo-card {
@@ -70,4 +71,8 @@ a {
 
 .no-display {
   display: none;
+}
+
+.count {
+  text-align: center;
 }
