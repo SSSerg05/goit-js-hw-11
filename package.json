@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/SSSerg05/goit-js-hw-11",
   "devDependencies": {
+    "buffer": "^5.7.1",
     "parcel": "^2.8.3"
   },
   "dependencies": {
