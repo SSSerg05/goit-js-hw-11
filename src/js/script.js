@@ -1,12 +1,17 @@
+// import
 import SimpleLightbox from "simplelightbox";
 import "simplelightbox/dist/simple-lightbox.min.css";
-
 import Notiflix from 'notiflix';
-
 const axios = require("axios/dist/axios.min.js"); // node
-//const axios = require('axios');
-const PER_PAGE = 40
 
+
+// values
+const PER_PAGE = 40
+let nextPage = 1;
+let valueForm = '';
+
+
+// tegs in html
 const refs = {
   form: document.querySelector(".search-form"),
   out: document.querySelector(".gallery"),
@@ -14,20 +19,23 @@ const refs = {
   btnNext: document.querySelector(".load-more"),
 }
 
+// events
 refs.form.addEventListener("submit", onFormSubmit);
 refs.form.addEventListener("input", onFormInput);
 refs.btnNext.addEventListener("click", onViewNext);
 
+// add class for not visible button
 refs.btnNext.classList.add("no-display")
-let nextPage = 1;
-let valueForm = '';
 
+// add slider with modal window
 const lightbox = new SimpleLightbox(".gallery a", { /* options */ });
 lightbox.on('show.simplelightbox', function () {
   // Do something…
   lightbox.captionDelay = 250;
 });
 
+
+// if change input - dont show button
 function onFormInput() { 
   refs.btnNext.classList.add("no-display")
 }
@@ -36,6 +44,8 @@ function onFormInput() {
 // username u_ht1qf13txz
 // user_id:36214966 
 // key 36214966-0d101d8d6f502ad642532aad3
+//
+// show gallery
 function onFormSubmit(event) { 
   event.preventDefault();
 
@@ -44,6 +54,13 @@ function onFormSubmit(event) {
     refs.btnNext.classList.add("no-display")
   }
     
+  fetchGallery()
+ 
+}
+
+// use axios: get data and prepere gallery
+//
+function fetchGallery() {
   // Optionally the request above could also be done as
   //https://pixabay.com/api/
   axios.get('https://pixabay.com/api/', {
@@ -58,12 +75,18 @@ function onFormSubmit(event) {
     }
   })
   .then(function (response) {
+    // console.log( response.data.hits);
+    if (response.data.hits.length === 0)  {
+      Notiflix.Notify.failure("Sorry, there are no images matching your search query. Please try again.");
+      return
+    }
+    
     refs.btnNext.classList.remove("no-display")
 
     let str = '';
     response.data.hits.forEach(item => {
       str += mask(item);
-    });
+    })
 
     refs.out.innerHTML = str;
     lightbox.refresh();
@@ -75,7 +98,6 @@ function onFormSubmit(event) {
     Notiflix.Notify.success("Hooray! We found totalHits images.")    
 
     const { height: cardHeight } = refs.out.firstElementChild.getBoundingClientRect();
-    console.dir(cardHeight )
 
     window.scrollBy({
       top: cardHeight * 2,
@@ -83,10 +105,11 @@ function onFormSubmit(event) {
     });
   })
   .catch(function (error) {
+    Notiflix.Notify.failure("Sorry, there are no images matching your search query. Please try again.");
     console.log(error);
   });
- 
 }
+
 
 // block for one image-card
 function mask(obj) { 
@@ -127,6 +150,7 @@ function mask(obj) {
   </a>`
 }
 
+
 function onViewNext() { 
  
   axios.get('https://pixabay.com/api/', {
@@ -143,7 +167,7 @@ function onViewNext() {
   .then(function (response) {
     nextPage++;
 
-    let str = '';
+    let str = refs.out.innerHTML;
     response.data.hits.forEach(item => {
       str += mask(item);
     });
@@ -151,12 +175,14 @@ function onViewNext() {
     refs.out.innerHTML = str;
     lightbox.refresh();
     refs.count.innerHTML = viewCountImages(response.data);
+
     if ((nextPage-1) * PER_PAGE > response.data.totalHits) { 
       Notiflix.Notify.failure("We're sorry, but you've reached the end of search results.")
       refs.btnNext.classList.add("no-display")
     }
   })
   .catch(function (error) {
+    Notiflix.Notify.failure("Sorry, there are no images matching your search query. Please try again.")
     console.log(error);
   });
  
@@ -166,6 +192,6 @@ function onViewNext() {
 function viewCountImages(obj) { 
   return `
   <div class="counts">
-    <p>Images: ${(nextPage - 2) * PER_PAGE + 1} - ${(nextPage - 1) * PER_PAGE} / Total: ${obj.totalHits }
+    <p>Images: 1 - ${(nextPage - 1) * PER_PAGE} / Total: ${obj.totalHits }
   </div>`
 }
