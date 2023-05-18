@@ -2,7 +2,11 @@
 import SimpleLightbox from "simplelightbox";
 import "simplelightbox/dist/simple-lightbox.min.css";
 import Notiflix from 'notiflix';
+
 const axios = require("axios/dist/axios.min.js"); // node
+
+const InfiniteScroll = require('infinite-scroll');
+
 
 
 // values
@@ -194,4 +198,31 @@ function viewCountImages(obj) {
   <div class="counts">
     <p>Images: 1 - ${(nextPage - 1) * PER_PAGE} / Total: ${obj.totalHits }
   </div>`
+}
+
+let $container = $('.container').infiniteScroll({
+  // options...
+  // enable button
+  button: '.view-more-button',
+});
+
+let $viewMoreButton = $('.view-more-button');
+
+// get Infinite Scroll instance
+let infScroll = $container.data('infiniteScroll');
+
+$container.on( 'load.infiniteScroll', onPageLoad );
+
+function onPageLoad() {
+  if ( infScroll.loadCount == 1 ) {
+    // after 2nd page loaded
+    // disable loading on scroll
+    $container.infiniteScroll( 'option', {
+      loadOnScroll: false,
+    });
+    // show button
+    $viewMoreButton.show();
+    // remove event listener
+    $container.off( 'load.infiniteScroll', onPageLoad );
+  }
 }

@@ -53,6 +53,7 @@ a {
   justify-content: center;
 
   margin-top: 12px;
+  margin-bottom: 12px;
 }
 
 .photo-card {
@@ -75,4 +76,36 @@ a {
 
 .count {
   text-align: center;
+  background-color: white;
+}
+
+.load-more {
+  margin-top: 60px;
+  margin-bottom: 60px;
+}
+
+.btn-load-more {
+  display: block;
+  margin: 0 auto;
+
+  width: 180px;
+  height: 60px;
+
+  background-color: cornflowerblue;
+  color: bisque;
+  border-radius: 12px;
+}
+
+.btn-load-more:hover {
+  background-color: blue;
+  color: yellow;
+}
+
+.sticky {
+  position: sticky;
+  top: 0;
+}
+.footer {
+  height: 24px;
+  background-color: cornflowerblue;
 }
