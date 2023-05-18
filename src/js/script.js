@@ -5,16 +5,16 @@ import Notiflix from 'notiflix';
 
 const axios = require("axios/dist/axios.min.js"); // node
 
-//no used
+//want, but no used
 //https://infinite-scroll.com/extras.html#module-loaders
 
 // values
-const PER_PAGE = 40
+const PER_PAGE = 40;
 let nextPage = 1;
 let valueForm = '';
 
 
-// tegs in html
+// elements in html
 const refs = {
   form: document.querySelector(".search-form"),
   out: document.querySelector(".gallery"),
@@ -39,8 +39,15 @@ lightbox.on('show.simplelightbox', function () {
 
 
 // if change input - dont show button
-function onFormInput() { 
-  refs.btnNext.classList.add("no-display")
+//
+function onFormInput(event) { 
+  refs.btnNext.classList.add("no-display");
+
+  if (valueForm !== event.target.value.trim()) {
+    nextPage = 1;
+  }
+
+  valueForm = event.target.value.trim();
 }
 
 
@@ -52,13 +59,25 @@ function onFormInput() {
 function onFormSubmit(event) { 
   event.preventDefault();
 
-  if (valueForm !== '') { 
-    nextPage = 1
-    refs.btnNext.classList.add("no-display")
+  if (valueForm === '') {
+    Notiflix.Notify.failure("Sorry, there are no images matching your search query. Please try again.");
+    return
   }
-    
-  fetchGallery()
+
+  if (nextPage > 1) {
+    return
+  } 
+  
+  // refs.searchQuery.disable = true;
+  fetchGallery();
  
+}
+
+// View Next card gallery
+//
+function onViewNext() { 
+ 
+  fetchGallery();
 }
 
 // use axios: get data and prepere gallery
@@ -78,7 +97,7 @@ function fetchGallery() {
     }
   })
   .then(function (response) {
-    // console.log( response.data.hits);
+    // if not find search 
     if (response.data.hits.length === 0)  {
       Notiflix.Notify.failure("Sorry, there are no images matching your search query. Please try again.");
       return
@@ -95,17 +114,24 @@ function fetchGallery() {
     lightbox.refresh();
 
     nextPage++;
-    valueForm = refs.form.elements.searchQuery.value.trim();
-
+    
     refs.count.innerHTML = viewCountImages(response.data);
     Notiflix.Notify.success("Hooray! We found totalHits images.")    
 
+
+    if ((nextPage-1) * PER_PAGE > response.data.totalHits) { 
+      Notiflix.Notify.failure("We're sorry, but you've reached the end of search results.")
+      refs.btnNext.classList.add("no-display")
+    }
+
+    // не зрозумів...
     // const { height: cardHeight } = refs.out.firstElementChild.getBoundingClientRect();
 
     // window.scrollBy({
     //   top: cardHeight * 2,
     //   behavior: "smooth",
     // });
+
   })
   .catch(function (error) {
     Notiflix.Notify.failure("Sorry, there are no images matching your search query. Please try again.");
@@ -115,6 +141,7 @@ function fetchGallery() {
 
 
 // block for one image-card
+//
 function mask(obj) { 
   
   const {
@@ -153,45 +180,8 @@ function mask(obj) {
   </a>`
 }
 
-
-function onViewNext() { 
- 
-  axios.get('https://pixabay.com/api/', {
-    params: {
-      key: '36214966-0d101d8d6f502ad642532aad3',
-      q: refs.form.elements.searchQuery.value.trim(),
-      image_type: 'photo',
-      orientation: 'horizontal',
-      safesearch: true,
-      page: nextPage,
-      per_page: PER_PAGE,
-    }
-  })
-  .then(function (response) {
-    nextPage++;
-
-    let str = refs.out.innerHTML;
-    response.data.hits.forEach(item => {
-      str += mask(item);
-    });
-
-    refs.out.innerHTML = str;
-    lightbox.refresh();
-    refs.count.innerHTML = viewCountImages(response.data);
-
-    if ((nextPage-1) * PER_PAGE > response.data.totalHits) { 
-      Notiflix.Notify.failure("We're sorry, but you've reached the end of search results.")
-      refs.btnNext.classList.add("no-display")
-    }
-  })
-  .catch(function (error) {
-    Notiflix.Notify.failure("Sorry, there are no images matching your search query. Please try again.")
-    console.log(error);
-  });
- 
-}
-
-
+// count images
+//
 function viewCountImages(obj) { 
   return `
   <div class="counts">
