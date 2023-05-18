@@ -12,6 +12,7 @@ const axios = require("axios/dist/axios.min.js"); // node
 const PER_PAGE = 40;
 let nextPage = 1;
 let valueForm = '';
+let outGallery = '';
 
 
 // elements in html
@@ -105,12 +106,12 @@ function fetchGallery() {
     
     refs.btnNext.classList.remove("no-display")
 
-    let str = '';
+    //strGallery += refs.out.innerHTML 
     response.data.hits.forEach(item => {
-      str += mask(item);
+      outGallery += mask(item);
     })
 
-    refs.out.innerHTML = str;
+    refs.out.innerHTML = outGallery;
     lightbox.refresh();
 
     nextPage++;
