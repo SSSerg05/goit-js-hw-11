@@ -5,9 +5,8 @@ import Notiflix from 'notiflix';
 
 const axios = require("axios/dist/axios.min.js"); // node
 
-const InfiniteScroll = require('infinite-scroll');
-
-
+//no used
+//https://infinite-scroll.com/extras.html#module-loaders
 
 // values
 const PER_PAGE = 40
@@ -101,12 +100,12 @@ function fetchGallery() {
     refs.count.innerHTML = viewCountImages(response.data);
     Notiflix.Notify.success("Hooray! We found totalHits images.")    
 
-    const { height: cardHeight } = refs.out.firstElementChild.getBoundingClientRect();
+    // const { height: cardHeight } = refs.out.firstElementChild.getBoundingClientRect();
 
-    window.scrollBy({
-      top: cardHeight * 2,
-      behavior: "smooth",
-    });
+    // window.scrollBy({
+    //   top: cardHeight * 2,
+    //   behavior: "smooth",
+    // });
   })
   .catch(function (error) {
     Notiflix.Notify.failure("Sorry, there are no images matching your search query. Please try again.");
@@ -196,33 +195,6 @@ function onViewNext() {
 function viewCountImages(obj) { 
   return `
   <div class="counts">
-    <p>Images: 1 - ${(nextPage - 1) * PER_PAGE} / Total: ${obj.totalHits }
+    <p>Add pages #${nextPage-1}. Images: 1 - ${(nextPage - 1) * PER_PAGE} / Total: ${obj.totalHits }
   </div>`
-}
-
-let $container = $('.container').infiniteScroll({
-  // options...
-  // enable button
-  button: '.view-more-button',
-});
-
-let $viewMoreButton = $('.view-more-button');
-
-// get Infinite Scroll instance
-let infScroll = $container.data('infiniteScroll');
-
-$container.on( 'load.infiniteScroll', onPageLoad );
-
-function onPageLoad() {
-  if ( infScroll.loadCount == 1 ) {
-    // after 2nd page loaded
-    // disable loading on scroll
-    $container.infiniteScroll( 'option', {
-      loadOnScroll: false,
-    });
-    // show button
-    $viewMoreButton.show();
-    // remove event listener
-    $container.off( 'load.infiniteScroll', onPageLoad );
-  }
 }

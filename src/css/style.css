@@ -10,6 +10,12 @@ body{
   margin: 0 auto;
 }
 
+.btn {
+  background-color: rgb(65, 121, 225);
+  color: bisque;
+  border-radius: 12px;
+}
+
 .image {
   display: block;
   width: 100%;
@@ -36,6 +42,11 @@ p {
  padding-bottom: 5px;
  border-radius: 5px;
  padding-left: 7px;
+}
+
+.btn-search {
+  width: 90px;
+  height: 30px;
 }
 
 a {
@@ -90,13 +101,9 @@ a {
 
   width: 180px;
   height: 60px;
-
-  background-color: cornflowerblue;
-  color: bisque;
-  border-radius: 12px;
 }
 
-.btn-load-more:hover {
+.btn:hover {
   background-color: blue;
   color: yellow;
 }
