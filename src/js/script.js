@@ -3,6 +3,9 @@ import SimpleLightbox from "simplelightbox";
 import "simplelightbox/dist/simple-lightbox.min.css";
 import Notiflix from 'notiflix';
 
+import Gallery from './Gallery.js';
+import LoadMoreBtn from './LoadMoreBtn.js';
+
 const axios = require("axios/dist/axios.min.js"); // node
 
 //want, but no used
@@ -14,22 +17,29 @@ let nextPage = 1;
 let valueForm = '';
 let outGallery = '';
 
-
 // elements in html
 const refs = {
   form: document.querySelector(".search-form"),
   out: document.querySelector(".gallery"),
   count: document.querySelector(".count"),
-  btnNext: document.querySelector(".load-more"),
+//  btnNext: document.querySelector(".load-more"),
 }
+
+const newGallery = new Gallery();
+const loadMoreBtn = new LoadMoreBtn({
+  selector: ".load-more",
+  isHidden: true,
+});
 
 // events
 refs.form.addEventListener("submit", onFormSubmit);
 refs.form.addEventListener("input", onFormInput);
-refs.btnNext.addEventListener("click", onViewNext);
+//refs.btnNext.addEventListener("click", onViewNext);
+
+loadMoreBtn.button.addEventListener('click', onViewNext); //fetchArticles)
 
 // add class for not visible button
-refs.btnNext.classList.add("no-display")
+//refs.btnNext.classList.add("no-display")
 
 // add slider with modal window
 const lightbox = new SimpleLightbox(".gallery a", { /* options */ });
@@ -42,7 +52,20 @@ lightbox.on('show.simplelightbox', function () {
 // if change input - dont show button
 //
 function onFormInput(event) { 
-  refs.btnNext.classList.add("no-display");
+  const form = event.curretTarget;
+  const value = refs.form.elements.searchQuery.value.trim();
+
+  if (value === "") {
+    Notiflix.Notify.failure("Sorry, there are no images matching your search query. Please try again.");
+  } else {
+    newGallery.searchQuery = value;
+    newGallery.resetPage;
+  }
+  
+
+
+
+  //refs.btnNext.classList.add("no-display");
 
   if (valueForm !== event.target.value.trim()) {
     nextPage = 1;
@@ -65,20 +88,48 @@ function onFormSubmit(event) {
     return
   }
 
-  if (nextPage > 1) {
-    return
-  } 
+  // if (nextPage > 1) {
+  //   return
+  // } 
   
   // refs.searchQuery.disable = true;
-  fetchGallery();
+  getNewPictures();
+  // fetchGallery();
  
 }
+
+
+function getNewPictures() {
+  return newGallery
+    .getPictures()
+    .then((data) => {
+      if (!data) {
+          loadMoreBtn.hide();
+          return "";
+      }
+
+      if (data.length === 0) {
+        throw new Error("No data");
+        return;
+      }
+
+      return data.reduce(
+        (acc, data) => acc + 1, ""); //createAcc(data));
+    })
+    .then(updateGallery)
+}
+
+
+
+
 
 // View Next card gallery
 //
 function onViewNext() { 
  
-  fetchGallery();
+//  fetchGallery();
+  getNewPictures();
+
 }
 
 // use axios: get data and prepere gallery
@@ -122,7 +173,7 @@ function fetchGallery() {
 
     if ((nextPage-1) * PER_PAGE > response.data.totalHits) { 
       Notiflix.Notify.failure("We're sorry, but you've reached the end of search results.")
-      refs.btnNext.classList.add("no-display")
+      //refs.btnNext.classList.add("no-display")
     }
 
     // не зрозумів...

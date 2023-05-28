@@ -1,4 +1,5 @@
 const axios = require("axios/dist/axios.min.js"); // node
+import Notiflix from 'notiflix';
 
 const URL = 'https://pixabay.com/api/';
 const API_KEY = '36214966-0d101d8d6f502ad642532aad3';
@@ -10,7 +11,8 @@ export default class Gallery {
     this.searchQuery = '';
   }
 
-  getPictures() {
+  async getPictures() {
+    
     const params = {
       key: API_KEY,
       q: this.searchQuery,
@@ -20,20 +22,20 @@ export default class Gallery {
       page: this.page,
       per_page: PER_PAGE,
     }
-
-    return axios
-      .get(
-        `${URL}`, params 
-      )
+    console.log("params", params);
+    return await axios
+      .get( URL, params )
       .then(function (response) {
         this.incrementPage();
+        console.log("response", response);
 
-
-      // if not find search 
+        // if not find search 
         if (response.data.hits.length === 0)  {
           Notiflix.Notify.failure("Sorry, there are no images matching your search query. Please try again.");
           return
         }
+
+        return response.data.hits;
       })
       .catch(
         function (error) {
