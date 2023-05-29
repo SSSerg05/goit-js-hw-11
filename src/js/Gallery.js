@@ -22,24 +22,23 @@ export default class Gallery {
       page: this.page,
       per_page: PER_PAGE,
     }
-    console.log("params", params);
+
     return await axios
-      .get( URL, params )
+      .get(URL, { params } )
       .then(function (response) {
-        this.incrementPage();
-        console.log("response", response);
+        // this.incrementPage();
 
         // if not find search 
-        if (response.data.hits.length === 0)  {
-          Notiflix.Notify.failure("Sorry, there are no images matching your search query. Please try again.");
-          return
-        }
+        // if (response.data.hits.length === 0)  {
+        //   Notiflix.Notify.failure("Sorry, there are no images matching your search query. Please try again.");
+        //   return
+        // }
 
         return response.data.hits;
       })
       .catch(
         function (error) {
-          Notiflix.Notify.failure("Sorry, there are no images matching your search query. Please try again.");
+          Notiflix.Notify.failure("GalleryCatch Sorry, there are no images matching your search query. Please try again.");
           console.log(error);
       })
   }
@@ -47,4 +46,9 @@ export default class Gallery {
   incrementPage() {
     this.page++;
   }
+
+  resetPage() { 
+    this.page = 1;
+  }
+
 }
