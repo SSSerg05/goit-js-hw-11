@@ -10,6 +10,12 @@ body{
   margin: 0 auto;
 }
 
+.btn {
+  background-color: rgb(65, 121, 225);
+  color: bisque;
+  border-radius: 12px;
+}
+
 .image {
   display: block;
   width: 100%;
@@ -38,6 +44,11 @@ p {
  padding-left: 7px;
 }
 
+.btn-search {
+  width: 90px;
+  height: 30px;
+}
+
 a {
   outline: none;
   text-decoration: none;
@@ -53,6 +64,7 @@ a {
   justify-content: center;
 
   margin-top: 12px;
+  margin-bottom: 12px;
 }
 
 .photo-card {
@@ -75,4 +87,32 @@ a {
 
 .count {
   text-align: center;
+  background-color: white;
+}
+
+.load-more {
+  margin-top: 60px;
+  margin-bottom: 60px;
+}
+
+.btn-load-more {
+  display: block;
+  margin: 0 auto;
+
+  width: 180px;
+  height: 60px;
+}
+
+.btn:hover {
+  background-color: blue;
+  color: yellow;
+}
+
+.sticky {
+  position: sticky;
+  top: 0;
+}
+.footer {
+  height: 24px;
+  background-color: cornflowerblue;
 }
