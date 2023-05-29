@@ -22,11 +22,11 @@ export default class Gallery {
       page: this.page,
       per_page: PER_PAGE,
     }
-
+    
+    this.incrementPage();
     return await axios
       .get(URL, { params } )
       .then(function (response) {
-        // this.incrementPage();
 
         // if not find search 
         // if (response.data.hits.length === 0)  {

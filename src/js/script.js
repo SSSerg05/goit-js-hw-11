@@ -16,6 +16,8 @@ import LoadMoreBtn from './LoadMoreBtn.js';
 // let nextPage = 1;
 // let valueForm = '';
 // let outGallery = '';
+let errStr = "Sorry, there are no images matching your search query. Please try again."
+
 
 // elements in html
 const refs = {
@@ -55,7 +57,7 @@ function onFormInput(event) {
   const value = refs.form.elements.searchQuery.value.trim();
 
   if (value === "") {
-    Notiflix.Notify.failure("Input Sorry, there are no images matching your search query. Please try again.");
+    Notiflix.Notify.failure(errStr);
   } else {
     newGallery.searchQuery = value;
     newGallery.resetPage();
@@ -76,7 +78,7 @@ function onFormSubmit(event) {
   event.preventDefault();
 
    if (value === '') {
-    Notiflix.Notify.failure("Submit Sorry, there are no images matching your search query. Please try again.");
+    Notiflix.Notify.failure(errStr);
     return
   }
 
@@ -100,7 +102,7 @@ function getNewPictures() {
       }
 
       return data.reduce(
-        (acc, data) => createGallery(data) + acc, ""); //createAcc(data));
+        (acc, data) => acc + createGallery(data), ""); //createAcc(data));
     })
     .then(updateGallery)
     .catch(onError)
@@ -150,6 +152,7 @@ function updateGallery(data) {
 
 
 function onError(error) { 
+  Notiflix.Notify.failure(errStr);
   console.log(error);
 }
 
