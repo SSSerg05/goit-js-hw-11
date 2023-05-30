@@ -24,21 +24,28 @@ const refs = {
   form: document.querySelector(".search-form"),
   out: document.querySelector(".gallery"),
   count: document.querySelector(".count"),
-//  btnNext: document.querySelector(".load-more"),
 }
 
 const newGallery = new Gallery();
 const loadMoreBtn = new LoadMoreBtn({
-  selector: ".load-more",
+  selector: ".btn-load-more",
+  name: "Load More",
+  nameEvent: "Loading...",
   isHidden: true,
 });
+
+const searchBtn = new LoadMoreBtn({
+  selector: ".btn-search",
+  name: "Search",
+  nameEvent: "Search",
+  isHidden: false,
+})
 
 // events
 refs.form.addEventListener("submit", onFormSubmit);
 refs.form.addEventListener("input", onFormInput);
-//refs.btnNext.addEventListener("click", onViewNext);
 
-loadMoreBtn.button.addEventListener('click', onViewNext); //fetchArticles)
+loadMoreBtn.button.addEventListener('click', onViewNext);
 
 // add class for not visible button
 //refs.btnNext.classList.add("no-display")
@@ -56,12 +63,14 @@ lightbox.on('show.simplelightbox', function () {
 function onFormInput(event) { 
   const value = refs.form.elements.searchQuery.value.trim();
 
+  searchBtn.enable();
+
   if (value === "") {
     Notiflix.Notify.failure(errStr);
   } else {
+    loadMoreBtn.hide();
     newGallery.searchQuery = value;
     newGallery.resetPage();
-    loadMoreBtn.disable();
     refs.out.innerHTML = '';
   }
 }
@@ -75,40 +84,46 @@ function onFormInput(event) {
 function onFormSubmit(event) { 
   const value = newGallery.searchQuery;
   
-  loadMoreBtn.disable();
+  searchBtn.disable();
+
   event.preventDefault();
 
-   if (value === '') {
+  if (value === '') {
     Notiflix.Notify.failure(errStr);
     return
   }
 
-  getNewPictures().then(() => loadMoreBtn.enable());
+  if (newGallery.page >= 1) {
+    loadMoreBtn.show();
+  }
+
+  return getNewPictures().then(() => loadMoreBtn.enable());
  
 }
 
 
 async function getNewPictures() {
-  const card = await newGallery.getPictures()
   
-  // return newGallery
-  //   .getPictures()
-  //   .then((data) => {
-  //     if (!data) {
-  //         loadMoreBtn.hide();
-  //         return "";
-  //     }
+  //const card = await newGallery.getPictures()
+  
+  return newGallery
+    .getPictures()
+    .then((data) => {
+      if (!data) {
+          loadMoreBtn.hide();
+          return "";
+      }
 
-  //     if (data.length === 0) {
-  //       throw new Error("No data");
-  //       return;
-  //     }
+      if (data.length === 0) {
+        throw new Error("No data");
+        return;
+      }
 
-  //     return data.reduce(
-  //       (acc, data) => acc + createGallery(data), ""); //createAcc(data));
-  //   })
-  //   .then(updateGallery)
-  //   .catch(onError)
+      return data.reduce(
+        (acc, data) => acc + createGallery(data), ""); //createAcc(data));
+    })
+    .then(updateGallery)
+    .catch(onError)
 }
 
 // block for one image-card
@@ -163,8 +178,9 @@ function onError(error) {
 // View Next card gallery
 //
 function onViewNext() { 
- 
-  getNewPictures();
+
+  loadMoreBtn.disable();
+  return getNewPictures().then(() => loadMoreBtn.enable());
 
 }
 

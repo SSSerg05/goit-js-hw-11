@@ -10,11 +10,6 @@ body{
   margin: 0 auto;
 }
 
-.btn {
-  background-color: rgb(65, 121, 225);
-  color: bisque;
-  border-radius: 12px;
-}
 
 .image {
   display: block;
@@ -44,9 +39,27 @@ p {
  padding-left: 7px;
 }
 
+.btn {
+  background-color: rgb(65, 121, 225);
+  color: bisque;
+  border-radius: 12px;
+}
+
 .btn-search {
   width: 90px;
   height: 30px;
+}
+
+.btn-load-more {
+  display: block;
+  margin: 0 auto;
+
+  width: 180px;
+  height: 60px;
+}
+
+.btn:disabled{
+  background-color: grey;
 }
 
 a {
@@ -81,7 +94,7 @@ a {
   padding-bottom: 8px;
 }
 
-.no-display {
+.hidden {
   display: none;
 }
 
@@ -95,17 +108,16 @@ a {
   margin-bottom: 60px;
 }
 
-.btn-load-more {
-  display: block;
-  margin: 0 auto;
 
-  width: 180px;
-  height: 60px;
-}
 
 .btn:hover {
   background-color: blue;
   color: yellow;
+}
+
+.btn:hover:disabled {
+  background-color: grey;
+  color: bisque;
 }
 
 .sticky {

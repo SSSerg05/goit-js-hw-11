@@ -3,8 +3,10 @@ export default class LoadMoreBtn {
     hidden: "hidden",
   }
 
-  constructor({ selector, isHidden = false }) {
+  constructor({ selector, name, nameEvent, isHidden = false }) {
     this.button = this.getButton(selector)
+    this.name = name;
+    this.nameEvent = nameEvent;
 
     isHidden && this.hide();
     // isHidden = true && this.hide() -> true && true -> this.hide()
@@ -25,13 +27,13 @@ export default class LoadMoreBtn {
   }
 
   disable() {
-    this.button.disable = true;
-    this.button.textContent = "Loading...";
+    this.button.disabled = true;
+    this.button.textContent = this.nameEvent;
   }
 
   enable() {
-    this.button.disable = false;
-    this.button.textContent = "Load More LMB";
+    this.button.disabled = false;
+    this.button.textContent = this.name;
   }
 
 
