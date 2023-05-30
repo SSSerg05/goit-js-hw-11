@@ -61,7 +61,7 @@ function onFormInput(event) {
   } else {
     newGallery.searchQuery = value;
     newGallery.resetPage();
-    loadMoreBtn.hide();
+    loadMoreBtn.disable();
     refs.out.innerHTML = '';
   }
 }
@@ -75,6 +75,7 @@ function onFormInput(event) {
 function onFormSubmit(event) { 
   const value = newGallery.searchQuery;
   
+  loadMoreBtn.disable();
   event.preventDefault();
 
    if (value === '') {
@@ -82,30 +83,32 @@ function onFormSubmit(event) {
     return
   }
 
-  getNewPictures();
+  getNewPictures().then(() => loadMoreBtn.enable());
  
 }
 
 
-function getNewPictures() {
-  return newGallery
-    .getPictures()
-    .then((data) => {
-      if (!data) {
-          loadMoreBtn.hide();
-          return "";
-      }
+async function getNewPictures() {
+  const card = await newGallery.getPictures()
+  
+  // return newGallery
+  //   .getPictures()
+  //   .then((data) => {
+  //     if (!data) {
+  //         loadMoreBtn.hide();
+  //         return "";
+  //     }
 
-      if (data.length === 0) {
-        throw new Error("No data");
-        return;
-      }
+  //     if (data.length === 0) {
+  //       throw new Error("No data");
+  //       return;
+  //     }
 
-      return data.reduce(
-        (acc, data) => acc + createGallery(data), ""); //createAcc(data));
-    })
-    .then(updateGallery)
-    .catch(onError)
+  //     return data.reduce(
+  //       (acc, data) => acc + createGallery(data), ""); //createAcc(data));
+  //   })
+  //   .then(updateGallery)
+  //   .catch(onError)
 }
 
 // block for one image-card
