@@ -3,7 +3,7 @@ import Notiflix from 'notiflix';
 
 const URL = 'https://pixabay.com/api/';
 const API_KEY = '36214966-0d101d8d6f502ad642532aad3';
-const PER_PAGE = 40;
+const PER_PAGE = 100;
 
 export default class Gallery {
   constructor () {

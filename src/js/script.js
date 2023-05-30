@@ -47,9 +47,6 @@ refs.form.addEventListener("input", onFormInput);
 
 loadMoreBtn.button.addEventListener('click', onViewNext);
 
-// add class for not visible button
-//refs.btnNext.classList.add("no-display")
-
 // add slider with modal window
 const lightbox = new SimpleLightbox(".gallery a", { /* options */ });
 lightbox.on('show.simplelightbox', function () {
@@ -109,6 +106,7 @@ async function getNewPictures() {
   return newGallery
     .getPictures()
     .then((data) => {
+      console.log(data);
       if (!data) {
           loadMoreBtn.hide();
           return "";
@@ -127,6 +125,7 @@ async function getNewPictures() {
 }
 
 // block for one image-card
+//
 function createGallery( {
     webformatURL : smallImg,
     largeImageURL: fullImg,
@@ -170,6 +169,7 @@ function updateGallery(data) {
 
 
 function onError(error) { 
+  loadMoreBtn.enable();
   Notiflix.Notify.failure(errStr);
   console.log(error);
 }
@@ -184,48 +184,6 @@ function onViewNext() {
 
 }
 
-
-
-
-// block for one image-card
-//
-function mask(obj) { 
-  
-  const {
-    webformatURL : smallImg,
-    largeImageURL: fullImg,
-    tags: alt,
-    likes,
-    views,
-    comments,
-    downloads } = obj;
-  
-  return `
-  <a href="${fullImg}">
-    <div class="photo-card">
-      <img class="image"
-        src="${smallImg}" 
-        alt="{${alt}}" 
-        loading="lazy"
-        title="{${alt}}"/>
-
-      <div class="info">
-        <p class="info-item">
-         <b>Likes: </b>${likes}
-        </p>
-        <p class="info-item">
-          <b>Views: </b>${views}
-        </p>
-        <p class="info-item">
-          <b>Comments: </b>${comments}
-        </p>
-        <p class="info-item">
-          <b>Downloads: </b>${downloads}
-        </p>
-      </div>
-    </div>
-  </a>`
-}
 
 // count images
 //
