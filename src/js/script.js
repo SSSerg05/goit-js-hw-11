@@ -224,7 +224,10 @@ async function onViewNext() {
   
   try {
     const markup = await getNewPictures();
-
+    if (!markup) { 
+      throw new Error("No data");
+    }
+    
     loadMoreBtn.enable()
     updateGallery(markup);
     updateTotal();
