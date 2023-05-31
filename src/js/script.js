@@ -4,9 +4,7 @@ import "simplelightbox/dist/simple-lightbox.min.css";
 import Notiflix from 'notiflix';
 
 import Gallery from './Gallery.js';
-import LoadMoreBtn from './LoadMoreBtn.js';
-
-// const axios = require("axios/dist/axios.min.js"); // node
+import Buttons from './Buttons.js';
 
 //want, but no used
 //https://infinite-scroll.com/extras.html#module-loaders
@@ -27,14 +25,14 @@ const refs = {
 }
 
 const newGallery = new Gallery();
-const loadMoreBtn = new LoadMoreBtn({
+const loadMoreBtn = new Buttons({
   selector: ".btn-load-more",
   name: "Load More",
   nameEvent: "Loading...",
   isHidden: true,
 });
 
-const searchBtn = new LoadMoreBtn({
+const searchBtn = new Buttons({
   selector: ".btn-search",
   name: "Search",
   nameEvent: "Search",
