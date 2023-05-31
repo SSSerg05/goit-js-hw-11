@@ -95,7 +95,7 @@ function onFormSubmit(event) {
   onViewNext()
 
   console.log(newGallery.total, newGallery.perPage);
-  if (newGallery.page >= 1 && newGallery.total > newGallery.perPage) {
+  if (newGallery.page >= 1) {
     loadMoreBtn.show();
   }
 }
@@ -104,8 +104,10 @@ function onFormSubmit(event) {
 async function getNewPictures() {
   try {
     const cards = await newGallery.getPictures();
-  
+    const { total, perPage, page } = newGallery;
+
     if (!cards) {
+      loadMoreBtn.disable();
       loadMoreBtn.hide();
       return "";
     }
@@ -114,7 +116,12 @@ async function getNewPictures() {
       throw new Error("No data");
       return;
     }
-    
+
+    if (total < perPage || total < (page - 1) * perPage) {
+      loadMoreBtn.hide();
+      loadMoreBtn.disable();
+    }
+
     return cards.reduce(
          (acc, data) => acc + createGallery(data), "");
 
@@ -217,6 +224,8 @@ async function onViewNext() {
   
   try {
     const markup = await getNewPictures();
+
+    console.log(newGallery.total, newGallery.perPage);
 
     loadMoreBtn.enable()
     updateGallery(markup);
