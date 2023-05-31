@@ -92,11 +92,12 @@ function onFormSubmit(event) {
     return
   }
 
-  if (newGallery.page >= 1) {
+  onViewNext()
+
+  console.log(newGallery.total, newGallery.perPage);
+  if (newGallery.page >= 1 && newGallery.total > newGallery.perPage) {
     loadMoreBtn.show();
   }
-
-  onViewNext()
 }
 
 
@@ -104,7 +105,6 @@ async function getNewPictures() {
   try {
     const cards = await newGallery.getPictures();
   
-    // console.log(cards);
     if (!cards) {
       loadMoreBtn.hide();
       return "";
@@ -124,28 +124,6 @@ async function getNewPictures() {
     onError(error);
   }
 
-
-  
-  // return newGallery
-  //   .getPictures()
-  //   .then((data) => {
-  //     console.log(data);
-  //     if (!data) {
-  //         loadMoreBtn.hide();
-  //         return "";
-  //     }
-
-  //     if (data.length === 0) {
-  //       throw new Error("No data");
-  //       return;
-  //     }
-
-  //     return data.reduce(
-  //       (acc, data) => acc + createGallery(data), ""); //createAcc(data));
-  //   })
-  //   .then(updateGallery)
-  //   .then(updateTotal)
-  //   .catch(onError)
 }
 
 // block for one image-card
@@ -194,6 +172,10 @@ function createGallery(data) {
 
 
 function updateGallery(data) {
+  if (!data) { 
+    return
+  }
+    
   refs.out.insertAdjacentHTML("beforeend", data);
 }
 

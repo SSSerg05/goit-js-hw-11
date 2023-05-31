@@ -5,7 +5,7 @@ const URL = 'https://pixabay.com/api/';
 const API_KEY = '36214966-0d101d8d6f502ad642532aad3';
 
 export default class Gallery {
-  constructor (perPage = 100) {
+  constructor (perPage = 200) {
     this.page = 1;
     this.searchQuery = '';
     this.perPage = perPage;
@@ -27,7 +27,7 @@ export default class Gallery {
     const { data } = await axios.get(URL, { params })
     this.incrementPage();
     this.total = data.totalHits;
-    
+
     console.log(data);
 
     return data.hits;
@@ -39,6 +39,7 @@ export default class Gallery {
 
   resetPage() { 
     this.page = 1;
+    this.total = 0;
   }
 
 }
