@@ -99,7 +99,7 @@ function onFormSubmit(event) {
 
 async function getNewPictures() {
   
-  //const card = await newGallery.getPictures()
+  //const cards = await newGallery.getPictures()
   
   return newGallery
     .getPictures()
@@ -119,6 +119,7 @@ async function getNewPictures() {
         (acc, data) => acc + createGallery(data), ""); //createAcc(data));
     })
     .then(updateGallery)
+    .then(updateTotal)
     .catch(onError)
 }
 
@@ -165,9 +166,14 @@ function updateGallery(data) {
   refs.out.innerHTML += data
 }
 
+function updateTotal() { 
+  refs.count.innerHTML = viewCountImages();
+}
+
 
 function onError(error) { 
-  loadMoreBtn.enable();
+  loadMoreBtn.disable();
+
   Notiflix.Notify.failure(errStr);
   console.log(error);
 }
@@ -182,12 +188,14 @@ function onViewNext() {
 
 }
 
-
 // count images
 //
-function viewCountImages(obj) { 
+function viewCountImages() { 
+  const countImages = (newGallery.page - 1) * newGallery.perPage;
+  const totalImages = countImages > newGallery.total ? newGallery.total : countImages;
+
   return `
   <div class="counts">
-    <p>Add pages #${nextPage-1}. Images: 1 - ${(nextPage - 1) * PER_PAGE} / Total: ${obj.totalHits }
+    <p>Add pages #${newGallery.page - 1}. Images: 1 - ${totalImages} / Total: ${ newGallery.total }
   </div>`
 }
