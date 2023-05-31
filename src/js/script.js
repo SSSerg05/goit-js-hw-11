@@ -55,7 +55,7 @@ lightbox.on('show.simplelightbox', function () {
 
 // if change input - dont show button
 //
-function onFormInput(event) { 
+function onFormInput(event) {
   const value = refs.form.elements.searchQuery.value.trim();
   
   if (value === "") {
@@ -67,17 +67,18 @@ function onFormInput(event) {
   loadMoreBtn.hide();
 
   newGallery.searchQuery = value;
-  newGallery.resetPage();
-  
-  refs.out.innerHTML = "";
-  refs.count.innerHTML = "";  
+
+  clearGallery()
 }
 
 
-// username u_ht1qf13txz
 // user_id:36214966 
 // key 36214966-0d101d8d6f502ad642532aad3
-//
+//}
+
+
+// username u_ht1qf13txz
+
 // show gallery
 function onFormSubmit(event) { 
   const value = newGallery.searchQuery;
@@ -103,7 +104,7 @@ async function getNewPictures() {
   try {
     const cards = await newGallery.getPictures();
   
-    console.log(cards);
+    // console.log(cards);
     if (!cards) {
       loadMoreBtn.hide();
       return "";
@@ -118,6 +119,8 @@ async function getNewPictures() {
          (acc, data) => acc + createGallery(data), "");
 
   } catch (error) {
+    loadMoreBtn.hide();
+    loadMoreBtn.disable();
     onError(error);
   }
 
@@ -147,14 +150,20 @@ async function getNewPictures() {
 
 // block for one image-card
 //
-function createGallery( {
-    webformatURL : smallImg,
+function createGallery(data) {
+
+  if (!data) { 
+    return
+  }
+
+  const {
+    webformatURL: smallImg,
     largeImageURL: fullImg,
     tags: alt,
     likes,
     views,
     comments,
-    downloads }) {
+    downloads } = data;
   
   return `
   <a href="${fullImg}">
@@ -185,7 +194,7 @@ function createGallery( {
 
 
 function updateGallery(data) {
-  refs.out.innerHTML += data;
+  refs.out.insertAdjacentHTML("beforeend", data);
 }
 
 function updateTotal() {
@@ -196,6 +205,16 @@ function updateTotal() {
   } 
 
   refs.count.innerHTML = viewCountImages();
+}
+
+// clear out
+//
+function clearGallery() { 
+
+  newGallery.resetPage();
+
+  refs.out.innerHTML = "";
+  refs.count.innerHTML = "";
 }
 
 

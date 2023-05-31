@@ -27,6 +27,8 @@ export default class Gallery {
     const { data } = await axios.get(URL, { params })
     this.incrementPage();
     this.total = data.totalHits;
+    
+    console.log(data);
 
     return data.hits;
   }
