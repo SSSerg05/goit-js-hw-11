@@ -57,17 +57,20 @@ lightbox.on('show.simplelightbox', function () {
 //
 function onFormInput(event) { 
   const value = refs.form.elements.searchQuery.value.trim();
-
-  searchBtn.enable();
-
+  
   if (value === "") {
     Notiflix.Notify.failure(errStr);
-  } else {
-    loadMoreBtn.hide();
-    newGallery.searchQuery = value;
-    newGallery.resetPage();
-    refs.out.innerHTML = '';
+    return
   }
+
+  searchBtn.enable();
+  loadMoreBtn.hide();
+
+  newGallery.searchQuery = value;
+  newGallery.resetPage();
+  
+  refs.out.innerHTML = "";
+  refs.count.innerHTML = "";  
 }
 
 
@@ -92,35 +95,54 @@ function onFormSubmit(event) {
     loadMoreBtn.show();
   }
 
-  return getNewPictures().then(() => loadMoreBtn.enable());
- 
+  onViewNext()
 }
 
 
 async function getNewPictures() {
+  try {
+    const cards = await newGallery.getPictures();
   
-  //const cards = await newGallery.getPictures()
+    console.log(cards);
+    if (!cards) {
+      loadMoreBtn.hide();
+      return "";
+    }
+
+    if (cards.length === 0) {
+      throw new Error("No data");
+      return;
+    }
+    
+    return cards.reduce(
+         (acc, data) => acc + createGallery(data), "");
+
+  } catch (error) {
+    onError(error);
+  }
+
+
   
-  return newGallery
-    .getPictures()
-    .then((data) => {
-      console.log(data);
-      if (!data) {
-          loadMoreBtn.hide();
-          return "";
-      }
+  // return newGallery
+  //   .getPictures()
+  //   .then((data) => {
+  //     console.log(data);
+  //     if (!data) {
+  //         loadMoreBtn.hide();
+  //         return "";
+  //     }
 
-      if (data.length === 0) {
-        throw new Error("No data");
-        return;
-      }
+  //     if (data.length === 0) {
+  //       throw new Error("No data");
+  //       return;
+  //     }
 
-      return data.reduce(
-        (acc, data) => acc + createGallery(data), ""); //createAcc(data));
-    })
-    .then(updateGallery)
-    .then(updateTotal)
-    .catch(onError)
+  //     return data.reduce(
+  //       (acc, data) => acc + createGallery(data), ""); //createAcc(data));
+  //   })
+  //   .then(updateGallery)
+  //   .then(updateTotal)
+  //   .catch(onError)
 }
 
 // block for one image-card
@@ -163,16 +185,23 @@ function createGallery( {
 
 
 function updateGallery(data) {
-  refs.out.innerHTML += data
+  refs.out.innerHTML += data;
 }
 
-function updateTotal() { 
+function updateTotal() {
+
+  if (newGallery.total === 0) { 
+    refs.count.innerHTML = "";  
+    return
+  } 
+
   refs.count.innerHTML = viewCountImages();
 }
 
 
 function onError(error) { 
   loadMoreBtn.disable();
+  loadMoreBtn.hide();
 
   Notiflix.Notify.failure(errStr);
   console.log(error);
@@ -181,11 +210,21 @@ function onError(error) {
 
 // View Next card gallery
 //
-function onViewNext() { 
+async function onViewNext() { 
 
   loadMoreBtn.disable();
-  return getNewPictures().then(() => loadMoreBtn.enable());
+  
+  try {
+    const markup = await getNewPictures();
 
+    loadMoreBtn.enable()
+    updateGallery(markup);
+    updateTotal();
+
+    return markup;
+  } catch (error) {
+    onError(error);  
+  }
 }
 
 // count images
