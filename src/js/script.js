@@ -14,8 +14,6 @@ import Buttons from './Buttons.js';
 // let nextPage = 1;
 // let valueForm = '';
 // let outGallery = '';
-let errStr = "Sorry, there are no images matching your search query. Please try again."
-
 
 // elements in html
 const refs = {
@@ -59,7 +57,7 @@ function onFormInput(event) {
   const value = refs.form.elements.searchQuery.value.trim();
   
   if (value === "") {
-    Notiflix.Notify.failure(errStr);
+    throw new Error("No value in input");
     return
   }
 
@@ -85,7 +83,7 @@ function onFormSubmit(event) {
   event.preventDefault();
 
   if (value === '') {
-    Notiflix.Notify.failure(errStr);
+    throw new Error("No value in input");
     return
   }
 
@@ -114,9 +112,14 @@ async function getNewPictures() {
       return;
     }
 
+    if (page - 1 === 1) {
+      Notiflix.Notify.success(`Hooray! We found ${total} images.`);
+    }
+
     if (total < perPage || total < (page - 1) * perPage) {
       loadMoreBtn.hide();
       loadMoreBtn.disable();
+      Notiflix.Notify.info("We're sorry, but you've reached the end of search results.");
     }
 
     return cards.reduce(
@@ -208,10 +211,10 @@ function clearGallery() {
 
 
 function onError(error) { 
+
   loadMoreBtn.disable();
   loadMoreBtn.hide();
-
-  Notiflix.Notify.failure(errStr);
+  Notiflix.Notify.failure("Sorry, there are no images matching your search query. Please try again.");
   console.log(error);
 }
 
@@ -224,10 +227,7 @@ async function onViewNext() {
   
   try {
     const markup = await getNewPictures();
-    if (!markup) { 
-      throw new Error("No data");
-    }
-    
+      
     loadMoreBtn.enable()
     updateGallery(markup);
     updateTotal();
