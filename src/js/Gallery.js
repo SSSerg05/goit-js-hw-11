@@ -28,8 +28,6 @@ export default class Gallery {
     this.incrementPage();
     this.total = data.totalHits;
 
-    console.log(data);
-
     return data.hits;
   }
 

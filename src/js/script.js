@@ -89,12 +89,11 @@ function onFormSubmit(event) {
     return
   }
 
-  onViewNext()
-
-  console.log(newGallery.total, newGallery.perPage);
   if (newGallery.page >= 1) {
     loadMoreBtn.show();
   }
+
+  onViewNext()
 }
 
 // getCardPictures
@@ -225,8 +224,6 @@ async function onViewNext() {
   
   try {
     const markup = await getNewPictures();
-
-    console.log(newGallery.total, newGallery.perPage);
 
     loadMoreBtn.enable()
     updateGallery(markup);
