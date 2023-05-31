@@ -3,10 +3,10 @@ export default class Buttons {
     hidden: "hidden",
   }
 
-  constructor({ selector, name, nameEvent, isHidden = false }) {
+  constructor({ selector, name, nameDisable, isHidden = false }) {
     this.button = this.getButton(selector)
     this.name = name;
-    this.nameEvent = nameEvent;
+    this.nameDisable = nameDisable;
 
     isHidden && this.hide();
     // isHidden = true && this.hide() -> true && true -> this.hide()
@@ -28,7 +28,7 @@ export default class Buttons {
 
   disable() {
     this.button.disabled = true;
-    this.button.textContent = this.nameEvent;
+    this.button.textContent = this.nameDisable;
   }
 
   enable() {

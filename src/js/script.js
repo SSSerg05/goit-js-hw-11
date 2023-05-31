@@ -28,14 +28,14 @@ const newGallery = new Gallery();
 const loadMoreBtn = new Buttons({
   selector: ".btn-load-more",
   name: "Load More",
-  nameEvent: "Loading...",
+  nameDisable: "Loading...",
   isHidden: true,
 });
 
 const searchBtn = new Buttons({
   selector: ".btn-search",
   name: "Search",
-  nameEvent: "Search",
+  nameDisable: "Search",
   isHidden: false,
 })
 
