@@ -5,7 +5,7 @@ const URL = 'https://pixabay.com/api/';
 const API_KEY = '36214966-0d101d8d6f502ad642532aad3';
 
 export default class Gallery {
-  constructor (perPage = 200) {
+  constructor (perPage = 40) {
     this.page = 1;
     this.searchQuery = '';
     this.perPage = perPage;

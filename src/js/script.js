@@ -74,11 +74,8 @@ function onFormInput(event) {
 
 // user_id:36214966 
 // key 36214966-0d101d8d6f502ad642532aad3
-//}
-
-
 // username u_ht1qf13txz
-
+//
 // show gallery
 function onFormSubmit(event) { 
   const value = newGallery.searchQuery;
@@ -100,7 +97,8 @@ function onFormSubmit(event) {
   }
 }
 
-
+// getCardPictures
+//
 async function getNewPictures() {
   try {
     const cards = await newGallery.getPictures();
@@ -177,7 +175,8 @@ function createGallery(data) {
   </a>`
 }
 
-
+// update out
+//
 function updateGallery(data) {
   if (!data) { 
     return
@@ -186,6 +185,8 @@ function updateGallery(data) {
   refs.out.insertAdjacentHTML("beforeend", data);
 }
 
+// update out count page
+//
 function updateTotal() {
 
   if (newGallery.total === 0) { 
@@ -237,7 +238,7 @@ async function onViewNext() {
   }
 }
 
-// count images
+// Show count images
 //
 function viewCountImages() { 
   const countImages = (newGallery.page - 1) * newGallery.perPage;
