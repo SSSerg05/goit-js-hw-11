@@ -5,6 +5,7 @@ import Notiflix from 'notiflix';
 
 import Gallery from './Gallery.js';
 import Buttons from './Buttons.js';
+import simpleLightbox from "simplelightbox";
 
 //want, but no used
 //https://infinite-scroll.com/extras.html#module-loaders
@@ -185,18 +186,18 @@ function updateGallery(data) {
   }
     
   refs.out.insertAdjacentHTML("beforeend", data);
+  lightbox.refresh();
 }
 
 // update out count page
 //
 function updateTotal() {
 
-  if (newGallery.total === 0) { 
-    refs.count.innerHTML = "";  
-    return
-  } 
-
-  refs.count.innerHTML = viewCountImages();
+  if (newGallery.total === 0) {
+    refs.count.innerHTML = "";
+  } else {
+    refs.count.innerHTML = viewCountImages();
+  }
 }
 
 // clear out
